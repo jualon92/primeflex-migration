@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "description": "A script to migrate PrimeFlex 2.0 classes to 3.0",
   "main": "update-primeflex.js",
+  "bin": {
+    "primeflex-migration": "./update-primeflex.js"
+  },
   "scripts": {
     "start": "node update-primeflex.js"
   },
   "dependencies": {
-    "glob": "^7.1.6"
+    "glob": "10.4.5"
   },
-  "author": "Your Name",
+  "author": "Juan Ignacio Londra",
   "license": "MIT"
 }
