@@ -1,12 +1,14 @@
+#!/usr/bin/env node
+
 const fs = require("fs");
 const { promisify } = require("util");
-const { glob } = require("glob");
+const glob = require("glob");
+const path = require("path");
 const globAsync = promisify(glob);
-
 
 // Map of old class names to new class names for PrimeFlex 2.0 to 3.0 migration
 const classMap = {
-  //flex classes
+  // flex classes
   "p-d-flex": "flex",
   "p-d-inline-flex": "inline-flex",
   "p-flex-column": "flex-column",
@@ -144,65 +146,36 @@ const classMap = {
   "p-xl-12": "xl:col-12",
 };
 
-// Función para reemplazar las clases en el contenido del archivo
-function replaceClasses(content) {
-  let updatedContent = content;
-  for (const [oldClass, newClass] of Object.entries(classMap)) {
-    const regex = new RegExp(`\\b${oldClass}\\b`, 'g');
-    updatedContent = updatedContent.replace(regex, newClass);
-  }
-
-  // Reemplazo general para márgenes y padding
-  updatedContent = updatedContent.replace(/\bp-m([trblxy]?)-(\d+)\b/g, 'm$1-$2');
-  updatedContent = updatedContent.replace(/\bp-p([trblxy]?)-(\d+)\b/g, 'p$1-$2');
-
-  return updatedContent;
-}
-
-// Función para leer un archivo
-function readFile(filePath, callback) {
-  fs.readFile(filePath, 'utf8', (err, data) => {
-    if (err) {
-      console.error(`Error leyendo el archivo ${filePath}:`, err);
-      return;
-    }
-    callback(data);
-  });
-}
-
-// Función para escribir en un archivo
-function writeFile(filePath, content) {
-  fs.writeFile(filePath, content, 'utf8', (err) => {
-    if (err) {
-      console.error(`Error escribiendo el archivo ${filePath}:`, err);
-    } else {
-      console.log(`Archivo actualizado: ${filePath}`);
-    }
-  });
-}
-
-// Función para procesar el contenido del archivo
-function processFileContent(filePath, data) {
-  const updatedContent = replaceClasses(data);
-  writeFile(filePath, updatedContent);
-}
-
-// Función para procesar un archivo
-function processFile(filePath) {
-  readFile(filePath, (data) => {
-    processFileContent(filePath, data);
-  });
-}
-
-// Función para procesar todos los archivos en el proyecto
-async function processFiles() {
+const replaceClasses = async (filePath) => {
   try {
-    const files = await globAsync("**/*.{html,scss}", { ignore: 'node_modules/**' });
-    files.forEach(processFile);
-  } catch (err) {
-    console.error("Error buscando archivos:", err);
-  }
-}
+    const data = await fs.promises.readFile(filePath, "utf8");
+    let result = data;
 
-// Ejecutar el procesamiento de archivos
-processFiles();
+    for (const [oldClass, newClass] of Object.entries(classMap)) {
+      const regex = new RegExp(`\\b${oldClass}\\b`, "g");
+      result = result.replace(regex, newClass);
+    }
+
+    await fs.promises.writeFile(filePath, result, "utf8");
+    console.log(`Updated ${filePath}`);
+  } catch (err) {
+    console.error(`Error processing file ${filePath}:`, err);
+  }
+};
+
+const main = async () => {
+  try {
+    // Use the current working directory as the project root
+    const projectRoot = process.cwd();
+    const files = await globAsync("**/*.{html,scss}", {
+      cwd: projectRoot,
+      ignore: "node_modules/**",
+    });
+
+    await Promise.all(files.map((file) => replaceClasses(path.join(projectRoot, file))));
+  } catch (err) {
+    console.error("Error finding files:", err);
+  }
+};
+
+main();
