@@ -1,6 +1,6 @@
 {
   "name": "primeflex-migration",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A script to migrate PrimeFlex 2.0 classes to 3.0",
   "main": "update-primeflex.js",
   "bin": {
