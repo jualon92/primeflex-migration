@@ -10,7 +10,7 @@
     "start": "node update-primeflex.js"
   },
   "dependencies": {
-    "glob": "10.4.5"
+    "glob": "8.0.3"
   },
   "author": "Juan Ignacio Londra",
   "license": "MIT"
