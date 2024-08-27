@@ -5,11 +5,11 @@ This script helps migrate PrimeFlex 2.0 classes to 3.0 in HTML and SCSS files.
 
 
 ## Usage
-Install with npm
+Install with npm as a development dependency:
 
 
 
-    npm primeflex-migration  
+    npm install --save-dev primeflex-migration
 
 
 
