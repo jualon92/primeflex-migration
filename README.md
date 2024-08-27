@@ -2,19 +2,28 @@
 
 This script helps migrate PrimeFlex 2.0 classes to 3.0 in HTML and SCSS files.
 
-## Requirements
 
-- Node.js 
-- `glob` installed. https://www.npmjs.com/package/glob
 
 ## Usage
-In project folder, run
-    ```
-    node update-primeflex.js 
-    ```
+Install with npm
+
+
+
+    npm primeflex-migration  
+
+
+
+Then, run 
+
+
+
+    npx primeflex-migration  
+
 
 
 The script will search for HTML and SCSS files in the project and replace PrimeFlex 2.0 classes with the new PrimeFlex 3.0 classes. The script ignores the node_modules folder to avoid processing external dependencies.
+
+
 
 ## Example
 
